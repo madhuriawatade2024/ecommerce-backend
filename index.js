@@ -16,12 +16,14 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // Serve static files from "public" folder (for images, etc.)
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // Sample Product Data with Correct Image URLs
+const BASE_URL = "https://ecommerce-backend.onrender.com"; // Change this to your actual backend URL
+
 const products = [
-    { id: 1, name: "Laptop", image: "/images/laptop.jpg", description: "A powerful laptop", price: 1000 },
-    { id: 2, name: "Smartphone", image: "/images/phone.jpg", description: "Latest smartphone", price: 800 },
+    { id: 1, name: "Laptop", image: `${BASE_URL}/images/laptop.jpg`, description: "A powerful laptop", price: 1000 },
+    { id: 2, name: "Smartphone", image: `${BASE_URL}/images/phone.jpg`, description: "Latest smartphone", price: 800 },
 ];
 
 // API to fetch products
@@ -42,6 +44,11 @@ app.post("/api/orders", (req, res) => {
 
     console.log("Order placed successfully!", req.body);
     res.status(201).json({ message: "Order placed successfully!" });
+});
+
+// Default Route (Home Page)
+app.get("/", (req, res) => {
+    res.send("Welcome to the E-commerce API!");
 });
 
 // Handle unknown routes (404)
