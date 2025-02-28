@@ -17,16 +17,15 @@ app.use(bodyParser.json());
 
 // Serve static files from "public" folder (for images, etc.)
 // app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
-app.use('/images', express.static(path.join(__dirname, './public/images')));
+const BASE_URL = process.env.BASE_URL || "https://ecommerce-backend.onrender.com";
 
-
-// Sample Product Data with Correct Image URLs
-const BASE_URL = "https://ecommerce-backend.onrender.com"; // Change this to your actual backend URL
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 const products = [
     { id: 1, name: "Laptop", image: `${BASE_URL}/images/laptop.jpg`, description: "A powerful laptop", price: 1000 },
     { id: 2, name: "Smartphone", image: `${BASE_URL}/images/phone.jpg`, description: "Latest smartphone", price: 800 },
 ];
+
 
 // API to fetch products
 app.get("/api/products", (req, res) => {
