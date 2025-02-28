@@ -6,7 +6,12 @@ const path = require("path");
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+app.use(cors({
+    origin: "https://madhuriawatade2024.github.io", 
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
+}));
+
 app.use(bodyParser.json());
 
 // Serve static files from "public" folder
