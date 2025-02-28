@@ -16,7 +16,9 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // Serve static files from "public" folder (for images, etc.)
-app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+// app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+app.use('/images', express.static(path.join(__dirname, './public/images')));
+
 
 // Sample Product Data with Correct Image URLs
 const BASE_URL = "https://ecommerce-backend.onrender.com"; // Change this to your actual backend URL
