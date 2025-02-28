@@ -6,43 +6,47 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 5000; // Use dynamic port for deployment
 
-// Enable CORS for frontend
-app.use(cors({
-    origin: "https://madhuriawatade2024.github.io", // Allow frontend origin
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"]
-}));
+// ✅ Properly enable CORS for all requests
+app.use(cors());
+
+// ✅ Ensure CORS headers are set for every API response
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
 
 app.use(bodyParser.json());
 
-// Serve static files from "public" folder (for images, etc.)
-// app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
-const BASE_URL = process.env.BASE_URL || "https://ecommerce-backend.onrender.com";
-
+// Serve static files (Images)
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
+// ✅ Handle Preflight (OPTIONS) Requests for CORS
+app.options('*', (req, res) => {
+    res.sendStatus(200);
+});
+
+// Sample Product Data with Correct Image URLs
+const BASE_URL = "https://ecommerce-backend.onrender.com"; // Update with your backend URL
 const products = [
     { id: 1, name: "Laptop", image: `${BASE_URL}/images/laptop.jpg`, description: "A powerful laptop", price: 1000 },
     { id: 2, name: "Smartphone", image: `${BASE_URL}/images/phone.jpg`, description: "Latest smartphone", price: 800 },
 ];
 
-
 // API to fetch products
 app.get("/api/products", (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "*"); // Ensure CORS headers are sent
-    console.log("GET /api/products called"); // Log request
+    console.log("GET /api/products called");
     res.status(200).json(products);
 });
 
 // API to place an order (example)
 app.post("/api/orders", (req, res) => {
     const { firstName, lastName, address, cart } = req.body;
-
     if (!firstName || !lastName || !address || !Array.isArray(cart) || cart.length === 0) {
         console.log("Invalid order data received:", req.body);
         return res.status(400).json({ message: "Invalid order data" });
     }
-
     console.log("Order placed successfully!", req.body);
     res.status(201).json({ message: "Order placed successfully!" });
 });
