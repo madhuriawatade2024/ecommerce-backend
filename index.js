@@ -4,10 +4,11 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000; // Use dynamic port for deployment
 
+// CORS Middleware
 app.use(cors({
-    origin: "https://madhuriawatade2024.github.io", 
+    origin: ["https://madhuriawatade2024.github.io"], // Allow frontend origin
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -25,8 +26,18 @@ const products = [
 
 // API to fetch products
 app.get("/api/products", (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Ensure CORS headers are sent
     res.json(products);
 });
 
+// API to place an order (example)
+app.post("/api/orders", (req, res) => {
+    const { firstName, lastName, address, cart } = req.body;
+    if (!firstName || !lastName || !address || !cart || cart.length === 0) {
+        return res.status(400).json({ message: "Invalid order data" });
+    }
+    res.json({ message: "Order placed successfully!" });
+});
+
 // Start the server
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
