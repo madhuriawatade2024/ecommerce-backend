@@ -27,16 +27,23 @@ const products = [
 // API to fetch products
 app.get("/api/products", (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*"); // Ensure CORS headers are sent
-    res.json(products);
+    res.status(200).json(products);
 });
 
 // API to place an order (example)
 app.post("/api/orders", (req, res) => {
     const { firstName, lastName, address, cart } = req.body;
-    if (!firstName || !lastName || !address || !cart || cart.length === 0) {
+    
+    if (!firstName || !lastName || !address || !Array.isArray(cart) || cart.length === 0) {
         return res.status(400).json({ message: "Invalid order data" });
     }
-    res.json({ message: "Order placed successfully!" });
+    
+    res.status(201).json({ message: "Order placed successfully!" });
+});
+
+// Handle unknown routes
+app.use((req, res) => {
+    res.status(404).json({ message: "Route not found" });
 });
 
 // Start the server
